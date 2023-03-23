@@ -2,6 +2,7 @@ import { APTOS_FAUCET_URL, APTOS_NODE_URL, DAPP_ADDRESS } from '../config/consta
 import { useWallet } from '@manahippo/aptos-wallet-adapter';
 import { WalletClient } from '@martiandao/aptos-web3-bip44.js';
 import { useEffect, useState } from 'react';
+
 export default function Home() {
     const defaultResource = "0xda8c4886cae010ea1997f1b9295e8c3b6f8999276b46c77720beea4b6c5681b3::helloworld::NamedValue";
     const [resource, updateResource] = useState(defaultResource);
@@ -67,7 +68,6 @@ export default function Home() {
                 const address = account.address?.toString();
                 if (address) {
                     const currentBlance = await client.getBalance(address);
-                    console.log(currentBlance);
                     updateBalance(currentBlance);
                     console.log(address);
                     loadResource();
