@@ -13,7 +13,7 @@ export function NavBar() {
         </a>
         <ul className="menu menu-horizontal p-0 ml-5">
           <li className="font-sans font-semibold text-lg">
-            <a href="https://github.com/v1xingyue/apots-todo" target="_blank" rel="noreferrer">Source Code</a>
+            <a href="https://github.com/v1xingyue/aptos-todo" target="_blank" rel="noreferrer">Source Code</a>
             <a href={MODULE_URL} target="_blank" rel="noreferrer">Contract on Explorer</a>
           </li>
         </ul>

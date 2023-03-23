@@ -6,5 +6,5 @@ export const ModalContext = createContext({
   modalState: {
     walletModal: false,
   },
-  setModalState: (_: ModalState) => {},
+  setModalState: (_: ModalState) => { },
 });
