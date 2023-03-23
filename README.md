@@ -4,7 +4,7 @@
 
 本项目参考自：
 
-> https://github.com/Amovane/aptos-NFT-marketplace
+> <https://github.com/Amovane/aptos-NFT-marketplace>
 
 ## 启动运行
 
