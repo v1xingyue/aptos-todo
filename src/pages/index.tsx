@@ -12,7 +12,7 @@ export default function Home() {
     const [init, updateInit] = useState(false);
 
     const [updateInput, doUpdateUpdateInput] = useState({
-        value: 0,
+        value: "",
         message: ""
     });
 
@@ -23,6 +23,8 @@ export default function Home() {
                 const result = await client.aptosClient.getAccountResource(address, resource);
                 updateData(result);
                 updateInit(true);
+                const data: any = result.data;
+                doUpdateUpdateInput({ message: data.message, value: data.value });
             } catch (error) {
                 updateInit(false);
             }
@@ -92,7 +94,7 @@ export default function Home() {
                 </div>
             </div>
             {
-                init ? (<></>) : (<button className="btn btn-info" onClick={() => { initResource() }}>Init Message</button>)
+                init ? (<></>) : (<button className="btn btn-info" onClick={initResource}>Init Message</button>)
             }
 
 
@@ -104,17 +106,14 @@ export default function Home() {
                         className="input input-bordered w-full"
                         value={updateInput.value}
                         onChange={(e) => {
-                            const v = parseInt(e.target.value);
-                            doUpdateUpdateInput({ ...updateInput, value: isNaN(v) ? 0 : v })
+                            doUpdateUpdateInput({ ...updateInput, value: e.target.value })
                         }} />
                     <input type="text" placeholder="Resource value"
                         className="input input-bordered w-full"
                         value={updateInput.message}
                         onChange={(e) => { doUpdateUpdateInput({ ...updateInput, message: e.target.value }) }} />
                     <div className="card-actions justify-end">
-                        <button onClick={async () => {
-                            await doAtposUpdate();
-                        }} className="btn btn-primary">Update name & value</button>
+                        <button onClick={doAtposUpdate} className="btn btn-primary">Update name & value</button>
                     </div>
                 </div>
             </div>
@@ -125,9 +124,7 @@ export default function Home() {
                     <h2 className="card-title">load resource</h2>
                     <input type="text" placeholder="Type here" className="input input-bordered w-full" value={resource} onChange={(e) => { updateResource(e.target.value) }} />
                     <div className="card-actions justify-end">
-                        <button onClick={async () => {
-                            await loadResource();
-                        }} className="btn btn-primary">Load</button>
+                        <button onClick={loadResource} className="btn btn-primary">Load</button>
                     </div>
                 </div>
             </div>
