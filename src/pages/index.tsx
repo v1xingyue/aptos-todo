@@ -1,4 +1,4 @@
-import { DAPP_ADDRESS, APTOS_FAUCET_URL, APTOS_NODE_URL, DAPP_NAME } from '../config/constants';
+import { APTOS_FAUCET_URL, APTOS_NODE_URL } from '../config/constants';
 import { useWallet } from '@manahippo/aptos-wallet-adapter';
 import { WalletClient } from '@martiandao/aptos-web3-bip44.js';
 import { useEffect, useState } from 'react';
