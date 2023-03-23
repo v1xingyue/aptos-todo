@@ -43,20 +43,22 @@ export default function Home() {
 
     return (
         <>
-            <h2>Hello aptos todo system.</h2>
-            <p>Contract : {DAPP_ADDRESS}::{DAPP_NAME}</p>
-            <ul>
-                <li>{account?.address?.toString()}</li>
-                <li>{network?.name}</li>
-                <li>Balance: {balance}</li>
-            </ul>
-
-
 
             <div className="card w-2/4 bg-base-100 shadow-xl">
                 <div className="card-body">
+                    <h2 className="card-title">Hello aptos todo system.</h2>
+                    <ul>
+                        <li>Account : {account?.address?.toString()}</li>
+                        <li>Network: {network?.name}</li>
+                        <li>Balance: {balance}</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div className="card w-2/4 bg-base-100 shadow-xl mt-2">
+                <div className="card-body">
                     <h2 className="card-title">load resource</h2>
-                    <input type="text" placeholder="Type here" className="input input-bordered w-full" value={defaultResource} onChange={(e) => { updateResource(e.target.value) }} />
+                    <input type="text" placeholder="Type here" className="input input-bordered w-full" value={resource} onChange={(e) => { updateResource(e.target.value) }} />
                     <div className="card-actions justify-end">
                         <button onClick={async () => {
                             await loadResource();
