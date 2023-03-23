@@ -29,32 +29,32 @@ export default function Home() {
         }
     }
 
-    const init_paramss = () => {
+    const initParams = () => {
         return {
             type: 'entry_function_payload',
-            function: DAPP_ADDRESS + '::helloworld::make_value',
+            function: `${DAPP_ADDRESS}::helloworld::make_value`,
             type_arguments: [],
             arguments: [0, "hello aptos."],
         };
     }
 
-    async function init_resource() {
-        await signAndSubmitTransaction(init_paramss(), { gas_unit_price: 100 }).then(() => {
+    async function initResource() {
+        await signAndSubmitTransaction(initParams(), { gas_unit_price: 100 }).then(() => {
             setTimeout(loadResource, 3000);
         });
     }
 
-    const update_params = () => {
+    const updateParams = () => {
         return {
             type: 'entry_function_payload',
-            function: DAPP_ADDRESS + '::helloworld::update_message_value',
+            function: `${DAPP_ADDRESS}::helloworld::update_message_value`,
             type_arguments: [],
             arguments: [updateInput.message, updateInput.value],
         }
     }
 
-    async function update_resource() {
-        await signAndSubmitTransaction(update_params(), { gas_unit_price: 100 }).then(() => {
+    async function doAtposUpdate() {
+        await signAndSubmitTransaction(updateParams(), { gas_unit_price: 100 }).then(() => {
             setTimeout(loadResource, 3000);
         });
     }
@@ -92,7 +92,7 @@ export default function Home() {
                 </div>
             </div>
             {
-                init ? (<></>) : (<button className="btn btn-info" onClick={() => { init_resource() }}>Init Message</button>)
+                init ? (<></>) : (<button className="btn btn-info" onClick={() => { initResource() }}>Init Message</button>)
             }
 
 
@@ -104,7 +104,7 @@ export default function Home() {
                         className="input input-bordered w-full"
                         value={updateInput.value}
                         onChange={(e) => {
-                            let v = parseInt(e.target.value);
+                            const v = parseInt(e.target.value);
                             doUpdateUpdateInput({ ...updateInput, value: isNaN(v) ? 0 : v })
                         }} />
                     <input type="text" placeholder="Resource value"
@@ -113,7 +113,7 @@ export default function Home() {
                         onChange={(e) => { doUpdateUpdateInput({ ...updateInput, message: e.target.value }) }} />
                     <div className="card-actions justify-end">
                         <button onClick={async () => {
-                            await update_resource();
+                            await doAtposUpdate();
                         }} className="btn btn-primary">Update name & value</button>
                     </div>
                 </div>
