@@ -1,12 +1,11 @@
 import { DAPP_ADDRESS, APTOS_FAUCET_URL, APTOS_NODE_URL, DAPP_NAME } from '../config/constants';
 import { useWallet } from '@manahippo/aptos-wallet-adapter';
-import { AptosAccount, WalletClient, HexString } from '@martiandao/aptos-web3-bip44.js';
+import { WalletClient } from '@martiandao/aptos-web3-bip44.js';
 import { useEffect, useState } from 'react';
 export default function Home() {
-
-    const defaultResource = "0x37748d30ffba2bca14b1754eaddd153e80a068b898f8873aefa78806adfb6568::helloworld::NamedValue";
+    const defaultResource = "0xda8c4886cae010ea1997f1b9295e8c3b6f8999276b46c77720beea4b6c5681b3::helloworld::NamedValue";
     const [resource, updateResource] = useState(defaultResource);
-    const { account, signAndSubmitTransaction, wallet, network } = useWallet();
+    const { account, network } = useWallet();
     const client = new WalletClient(APTOS_NODE_URL, APTOS_FAUCET_URL);
     const [balance, updateBalance] = useState(0);
 
@@ -14,8 +13,8 @@ export default function Home() {
 
     const loadResource = async () => {
         if (account && account.address) {
-            let address = account.address?.toString();
-            let result = await client.aptosClient.getAccountResource(address, resource).catch(err => {
+            const address = account.address?.toString();
+            const result = await client.aptosClient.getAccountResource(address, resource).catch(err => {
                 console.log(err);
             });
             console.log(result);
@@ -26,9 +25,9 @@ export default function Home() {
     useEffect(() => {
         (async () => {
             if (account) {
-                let address = account.address?.toString();
+                const address = account.address?.toString();
                 if (address) {
-                    let currentBlance = await client.getBalance(address);
+                    const currentBlance = await client.getBalance(address);
                     console.log(currentBlance);
                     updateBalance(currentBlance);
                     console.log(address);
