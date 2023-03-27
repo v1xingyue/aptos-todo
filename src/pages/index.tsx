@@ -4,7 +4,7 @@ import { WalletClient } from '@martiandao/aptos-web3-bip44.js';
 import { useEffect, useState } from 'react';
 
 export default function Home() {
-    const defaultResource = "0xda8c4886cae010ea1997f1b9295e8c3b6f8999276b46c77720beea4b6c5681b3::helloworld::NamedValue";
+    const defaultResource = `${DAPP_ADDRESS}::helloworld::NamedValue`;
     const [resource, updateResource] = useState(defaultResource);
     const { account, network, signAndSubmitTransaction } = useWallet();
     const client = new WalletClient(APTOS_NODE_URL, APTOS_FAUCET_URL);
@@ -37,7 +37,7 @@ export default function Home() {
             type: 'entry_function_payload',
             function: `${DAPP_ADDRESS}::helloworld::make_value`,
             type_arguments: [],
-            arguments: [0, "hello aptos."],
+            arguments: [0, "hello world"],
         };
     }
 
@@ -46,6 +46,7 @@ export default function Home() {
             setTimeout(loadResource, 3000);
         });
     }
+
 
     const updateParams = () => {
         return {
@@ -80,8 +81,30 @@ export default function Home() {
 
 
 
+
+
+    const doTest = async () => {
+
+        const testParams = () => {
+            return {
+                type: 'entry_function_payload',
+                type_arguments: [],
+                function: '1558a1c3dd29e4b0bac3f30fb1030c0b25df408524cdcc59e0cec7e7aa1a5462::example::callme',
+                arguments: [],
+            }
+        }
+
+        console.log("this is a test");
+
+        await signAndSubmitTransaction(testParams(), { gas_unit_price: 500 }).then(() => {
+            setTimeout(loadResource, 3000);
+        });
+    }
+
     return (
         <>
+
+            <button onClick={doTest} className="btn btn-primary border-spacing-3 shadow-xl">Test Call</button>
 
             <div className="card w-2/4 bg-base-100 shadow-xl">
                 <div className="card-body">
@@ -93,9 +116,11 @@ export default function Home() {
                     </ul>
                 </div>
             </div>
-            {
-                init ? (<></>) : (<button className="btn btn-info" onClick={initResource}>Init Message</button>)
-            }
+            <div className="mt-5">
+                {
+                    init ? (<></>) : (<button className="btn btn-info" onClick={initResource}>Init Message 1 </button>)
+                }
+            </div>
 
 
 

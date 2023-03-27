@@ -63,7 +63,7 @@ export function WalletModal() {
               key={i}
               className={i === wallets.length - 1 ? 'btn gap-2' : 'btn gap-2 mb-5'}
               onClick={() => connectWallet(wallet)}>
-              <Image width={25} height={25} src={wallet.adapter.icon} />
+              <Image width={25} height={25} src={wallet.adapter.icon} alt="aptos" />
               {wallet.adapter.name}
             </button>
           );
