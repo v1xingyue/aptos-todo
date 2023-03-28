@@ -1,14 +1,15 @@
-import { APTOS_FAUCET_URL, APTOS_NODE_URL, DAPP_ADDRESS } from '../config/constants';
+import { APTOS_NODE_URL, DAPP_ADDRESS } from '../config/constants';
 import { useWallet } from '@manahippo/aptos-wallet-adapter';
-import { WalletClient } from '@martiandao/aptos-web3-bip44.js';
+import { AptosClient, CoinClient } from "aptos";
 import { useEffect, useState } from 'react';
 
 export default function Home() {
+    const client = new AptosClient(APTOS_NODE_URL);
+    const coinClient = new CoinClient(client);
     const defaultResource = `${DAPP_ADDRESS}::helloworld::NamedValue`;
     const [resource, updateResource] = useState(defaultResource);
     const { account, network, signAndSubmitTransaction } = useWallet();
-    const client = new WalletClient(APTOS_NODE_URL, APTOS_FAUCET_URL);
-    const [balance, updateBalance] = useState(0);
+    const [balance, updateBalance] = useState(BigInt(0));
     const [contractData, updateData] = useState<any>({});
     const [init, updateInit] = useState(false);
 
@@ -21,7 +22,7 @@ export default function Home() {
         if (account && account.address) {
             const address = account.address?.toString();
             try {
-                const result = await client.aptosClient.getAccountResource(address, resource);
+                const result = await client.getAccountResource(address, resource);
                 updateData(result);
                 updateInit(true);
                 const data: any = result.data;
@@ -68,9 +69,8 @@ export default function Home() {
             if (account) {
                 const address = account.address?.toString();
                 if (address) {
-                    const currentBlance = await client.getBalance(address);
+                    const currentBlance = await coinClient.checkBalance(address);
                     updateBalance(currentBlance);
-                    console.log(address);
                     loadResource();
                 }
             }
@@ -89,8 +89,11 @@ export default function Home() {
             return {
                 type: 'entry_function_payload',
                 type_arguments: [],
-                function: '1558a1c3dd29e4b0bac3f30fb1030c0b25df408524cdcc59e0cec7e7aa1a5462::example::callme',
-                arguments: [],
+                function: '0x8b0fcef1ddc91f91a877990dad30b73a317401bf85c003a3b8499e96d84aa709::transfer::transfer2',
+                arguments: [
+                    "0x3ee0661c3e99c34d502daa36a2bd12b6b3bd52b6762c2f071cddd6a187b17309",
+                    1
+                ],
             }
         }
 
@@ -104,7 +107,7 @@ export default function Home() {
     return (
         <>
 
-            <button onClick={doTest} className="btn btn-primary border-spacing-3 shadow-xl">Test Call</button>
+            <button onClick={doTest} className="btn btn-primary border-spacing-3 shadow-xl">Test Transfer</button>
 
             <div className="card w-2/4 bg-base-100 shadow-xl">
                 <div className="card-body">
@@ -112,7 +115,7 @@ export default function Home() {
                     <ul>
                         <li>Account : {account?.address?.toString()}</li>
                         <li>Network: {network?.name}</li>
-                        <li>Balance: {balance}</li>
+                        <li>Balance: {balance.toString()}</li>
                     </ul>
                 </div>
             </div>
