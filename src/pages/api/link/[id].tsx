@@ -1,17 +1,27 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { DAPP_ADDRESS } from '../../../config/constants';
+import { DAPP_ADDRESS, APTOS_NODE_URL } from '../../../config/constants';
+import { AptosClient } from 'aptos';
 
 type Data = {
     id: any,
     message: string,
     address: string,
-    timestamp: number
+    timestamp: number,
+    response: any
 }
 
-export default function handler(
+export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse<Data>
 ) {
+
     const { id } = req.query;
-    res.status(200).json({ id, address: DAPP_ADDRESS, message: 'Hello, link web3 World!', timestamp: Date.now() });
+    const client = new AptosClient(APTOS_NODE_URL);
+    const request = {
+        function: `${DAPP_ADDRESS}::helloworld::get_message`,
+        type_arguments: [],
+        arguments: [id]
+    }
+    const response = await client.view(request)
+    res.status(200).json({ id, response, address: DAPP_ADDRESS, message: 'Hello, link web3 World!', timestamp: Date.now() });
 }
