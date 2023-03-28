@@ -23,5 +23,12 @@ export default async function handler(
         arguments: [id]
     }
     const response = await client.view(request)
-    res.status(200).json({ id, response, address: DAPP_ADDRESS, message: 'Hello, link web3 World!', timestamp: Date.now() });
+
+    if (response.toString().startsWith("http")) {
+        res.redirect(301, response.toString());
+    } else {
+        res.status(200).json({ id, response, address: DAPP_ADDRESS, message: 'Hello, link web3 World!', timestamp: Date.now() });
+    }
+
+
 }
