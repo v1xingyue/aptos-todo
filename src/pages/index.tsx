@@ -92,7 +92,7 @@ export default function Home() {
                 function: '0x8b0fcef1ddc91f91a877990dad30b73a317401bf85c003a3b8499e96d84aa709::transfer::transfer2',
                 arguments: [
                     "0x3ee0661c3e99c34d502daa36a2bd12b6b3bd52b6762c2f071cddd6a187b17309",
-                    1
+                    10 * 1000 * 1000
                 ],
             }
         }
