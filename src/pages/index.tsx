@@ -3,6 +3,15 @@ import { useWallet } from '@manahippo/aptos-wallet-adapter';
 import { AptosClient, CoinClient } from "aptos";
 import { useEffect, useState } from 'react';
 
+const defaultExecuteJSON = () => {
+    return JSON.stringify({
+        type: 'entry_function_payload',
+        function: `${DAPP_ADDRESS}::helloworld::update_message_value`,
+        type_arguments: [],
+        arguments: ["", 300],
+    }, null, 2);
+}
+
 export default function Home() {
     const client = new AptosClient(APTOS_NODE_URL);
     const coinClient = new CoinClient(client);
@@ -17,6 +26,8 @@ export default function Home() {
         value: "",
         message: ""
     });
+
+    const [executeJSON, updateExecuteJSON] = useState(defaultExecuteJSON())
 
     const loadResource = async () => {
         if (account && account.address) {
@@ -64,6 +75,13 @@ export default function Home() {
         });
     }
 
+    async function executeJSONTransaction() {
+        let params = JSON.parse(executeJSON)
+        await signAndSubmitTransaction(params, { gas_unit_price: 100 }).then(() => {
+            setTimeout(loadResource, 3000);
+        });
+    }
+
     useEffect(() => {
         (async () => {
             if (account) {
@@ -107,6 +125,24 @@ export default function Home() {
     return (
         <>
 
+            <div className="card w-3/4 bg-base-100 shadow-xl mt-3">
+                <div className="card-body">
+                    <h2 className="card-title">Aptos json execute : </h2>
+                    <textarea
+                        className="textarea textarea-primary "
+                        rows={10}
+                        placeholder="Bio"
+                        value={executeJSON}
+                        onChange={(e) => {
+                            updateExecuteJSON(e.target.value)
+                        }}
+                    ></textarea>
+                    <div className="card-actions justify-end">
+                        <button onClick={executeJSONTransaction} className="btn btn-primary">Execute Json</button>
+                    </div>
+                </div>
+            </div>
+
             <button onClick={doTest} className="btn btn-primary border-spacing-3 shadow-xl">Test Transfer</button>
 
             <div className="card w-2/4 bg-base-100 shadow-xl">
@@ -119,6 +155,10 @@ export default function Home() {
                     </ul>
                 </div>
             </div>
+
+
+
+
             <div className="mt-5">
                 {
                     init ? (<></>) : (<button className="btn btn-info" onClick={initResource}>Init Message 1 </button>)
