@@ -76,7 +76,7 @@ export default function Home() {
     }
 
     async function executeJSONTransaction() {
-        let params = JSON.parse(executeJSON)
+        const params = JSON.parse(executeJSON)
         await signAndSubmitTransaction(params, { gas_unit_price: 100 }).then(() => {
             setTimeout(loadResource, 3000);
         });
@@ -96,10 +96,6 @@ export default function Home() {
     }, [
         account
     ])
-
-
-
-
 
     const doTest = async () => {
 
@@ -136,7 +132,7 @@ export default function Home() {
                         onChange={(e) => {
                             updateExecuteJSON(e.target.value)
                         }}
-                    ></textarea>
+                    />
                     <div className="card-actions justify-end">
                         <button onClick={executeJSONTransaction} className="btn btn-primary">Execute Json</button>
                     </div>
