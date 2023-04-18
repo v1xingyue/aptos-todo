@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 
 const resourceList = [
     `${DAPP_ADDRESS}::helloworld::NamedValue`,
+    `${DAPP_ADDRESS}::collec::TodoList`,
     `${DAPP_ADDRESS}::collec::TodoList`
 ]
 
@@ -206,7 +207,7 @@ export default function Home() {
 
                     <select onChange={(e) => { updateResource(e.target.value) }} className="select-lg select-primary w-full mt-5">
                         {
-                            resourceList.map((idx, item) => {
+                            resourceList.map((item, idx) => {
                                 return <option key={idx} value={item}>{item}</option>;
                             })
                         }
