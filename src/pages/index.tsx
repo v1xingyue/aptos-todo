@@ -3,6 +3,12 @@ import { useWallet } from '@manahippo/aptos-wallet-adapter';
 import { AptosClient, CoinClient } from "aptos";
 import { useEffect, useState } from 'react';
 
+
+const resourceList = [
+    `${DAPP_ADDRESS}::helloworld::NamedValue`,
+    `${DAPP_ADDRESS}::collec::TodoList`
+]
+
 const defaultExecuteJSON = () => {
     return JSON.stringify({
         type: 'entry_function_payload',
@@ -28,6 +34,7 @@ export default function Home() {
     });
 
     const [executeJSON, updateExecuteJSON] = useState(defaultExecuteJSON())
+
 
     const loadResource = async () => {
         if (account && account.address) {
@@ -97,6 +104,17 @@ export default function Home() {
         account
     ])
 
+
+    const loadTaskByKey = async (handle: string, key: string) => {
+        const table_item = await client.getTableItem(handle, {
+            key_type: "u64",
+            value_type: DAPP_ADDRESS + "::collec::Task",
+            key: key,
+        });
+        console.log(table_item);
+        alert(JSON.stringify(table_item, null, 2));
+    }
+
     const doTest = async () => {
 
         const testParams = () => {
@@ -140,8 +158,9 @@ export default function Home() {
             </div>
 
             <button onClick={doTest} className="btn btn-primary border-spacing-3 shadow-xl">Test Transfer</button>
+            <button onClick={() => loadTaskByKey("0x66b8c808a5cc2337deae5d18ebd94920dfc317fd28461a49c90987b0ff6c195d", "1")} className="ml-3 btn btn-primary border-spacing-3 shadow-xl">Test Table Item</button>
 
-            <div className="card w-2/4 bg-base-100 shadow-xl">
+            <div className="card w-3/4 bg-base-100 shadow-xl">
                 <div className="card-body">
                     <h2 className="card-title">Hello aptos todo system.</h2>
                     <ul>
@@ -152,9 +171,6 @@ export default function Home() {
                 </div>
             </div>
 
-
-
-
             <div className="mt-5">
                 {
                     init ? (<></>) : (<button className="btn btn-info" onClick={initResource}>Init Message 1 </button>)
@@ -163,7 +179,7 @@ export default function Home() {
 
 
 
-            <div className="card w-2/4 bg-base-100 shadow-xl mt-2">
+            <div className="card w-3/4 bg-base-100 shadow-xl mt-2">
                 <div className="card-body">
                     <h2 className="card-title">update resource</h2>
                     <input type="text" placeholder="Resource value"
@@ -172,7 +188,7 @@ export default function Home() {
                         onChange={(e) => {
                             doUpdateUpdateInput({ ...updateInput, value: e.target.value })
                         }} />
-                    <input type="text" placeholder="Resource value"
+                    <input type="text" placeholder="Resource message"
                         className="input input-bordered w-full"
                         value={updateInput.message}
                         onChange={(e) => { doUpdateUpdateInput({ ...updateInput, message: e.target.value }) }} />
@@ -183,18 +199,32 @@ export default function Home() {
             </div>
 
 
-            <div className="card w-2/4 bg-base-100 shadow-xl mt-2">
+            <div className="card w-3/4 bg-base-100 shadow-xl mt-2">
                 <div className="card-body">
                     <h2 className="card-title">load resource</h2>
-                    <input type="text" placeholder="Type here" className="input input-bordered w-full" value={resource} onChange={(e) => { updateResource(e.target.value) }} />
+
+
+                    <select onChange={(e) => { updateResource(e.target.value) }} className="select-lg select-primary w-full mt-5">
+                        {
+                            resourceList.map((item) => {
+                                return (
+                                    <option value={item}>{item}</option>
+                                );
+                            })
+                        }
+                    </select>
                     <div className="card-actions justify-end">
                         <button onClick={loadResource} className="btn btn-primary">Load</button>
                     </div>
                 </div>
             </div>
 
-            <h2>Contract Data : </h2>
-            <pre>{JSON.stringify(contractData, null, 2)}</pre>
+            <div className='card w-3/4 bg-base-100 shadow-xl mt-2'>
+                <div className="card-body">
+                    <h2>Contract Data : </h2>
+                    <pre>{JSON.stringify(contractData, null, 2)}</pre>
+                </div>
+            </div>
 
         </>
     )

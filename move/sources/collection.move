@@ -5,6 +5,8 @@ module todo::collec {
     use std::event;
     use std::string::{String};
     use std::signer;
+    use std::vector;
+
 
     // Errors
     const E_NOT_INITIALIZED: u64 = 1;
@@ -14,7 +16,8 @@ module todo::collec {
     struct TodoList  has key {
         tasks: Table<u64, Task>,
         set_task_event: event::EventHandle<Task>,
-        task_counter: u64
+        task_counter: u64,
+        task_ids: vector<u64>,
     }
 
     struct Task has key,store,drop,copy {
@@ -28,7 +31,8 @@ module todo::collec {
         let tasks_holder = TodoList {
             tasks: table::new(),
             set_task_event: account::new_event_handle<Task>(account),
-            task_counter: 0
+            task_counter: 0,
+            task_ids: vector::empty<u64>(),
         };
         move_to(account, tasks_holder);
     }
@@ -53,6 +57,7 @@ module todo::collec {
         table::upsert(&mut todo_list.tasks, counter, new_task);
         // sets the task counter to be the incremented counter
         todo_list.task_counter = counter;
+        vector::push_back(&mut todo_list.task_ids, counter);
         // fires a new task created event
         event::emit_event<Task>(
             &mut borrow_global_mut<TodoList>(signer_address).set_task_event,
