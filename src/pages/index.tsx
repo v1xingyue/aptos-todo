@@ -106,13 +106,13 @@ export default function Home() {
 
 
     const loadTaskByKey = async (handle: string, key: string) => {
-        const table_item = await client.getTableItem(handle, {
+        const tableItem = await client.getTableItem(handle, {
             key_type: "u64",
-            value_type: DAPP_ADDRESS + "::collec::Task",
-            key: key,
+            value_type: `${DAPP_ADDRESS}::collec::Task`,
+            key,
         });
-        console.log(table_item);
-        alert(JSON.stringify(table_item, null, 2));
+        console.log(tableItem);
+        alert(JSON.stringify(tableItem, null, 2));
     }
 
     const doTest = async () => {
@@ -206,10 +206,8 @@ export default function Home() {
 
                     <select onChange={(e) => { updateResource(e.target.value) }} className="select-lg select-primary w-full mt-5">
                         {
-                            resourceList.map((item) => {
-                                return (
-                                    <option value={item}>{item}</option>
-                                );
+                            resourceList.map((idx, item) => {
+                                return <option key={idx} value={item}>{item}</option>;
                             })
                         }
                     </select>
@@ -219,7 +217,7 @@ export default function Home() {
                 </div>
             </div>
 
-            <div className='card w-3/4 bg-base-100 shadow-xl mt-2'>
+            <div className="card w-3/4 bg-base-100 shadow-xl mt-2">
                 <div className="card-body">
                     <h2>Contract Data : </h2>
                     <pre>{JSON.stringify(contractData, null, 2)}</pre>
