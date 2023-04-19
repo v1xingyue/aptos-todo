@@ -6,7 +6,6 @@ import { useEffect, useState } from 'react';
 
 const resourceList = [
     `${DAPP_ADDRESS}::helloworld::NamedValue`,
-    `${DAPP_ADDRESS}::collec::TodoList`,
     `${DAPP_ADDRESS}::collec::TodoList`
 ]
 
