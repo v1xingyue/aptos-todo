@@ -27,10 +27,18 @@ export default function Home() {
     const [balance, updateBalance] = useState(BigInt(0));
     const [contractData, updateData] = useState<any>({});
     const [init, updateInit] = useState(false);
+    const [tableItems, updateTableItems] = useState<any[]>([])
 
     const [updateInput, doUpdateUpdateInput] = useState({
         value: "",
         message: ""
+    });
+
+    const [tableParam, doUpdateTableParam] = useState({
+        keyType: "",
+        valueType: "",
+        handle: "",
+        keys: ""
     });
 
     const [executeJSON, updateExecuteJSON] = useState(defaultExecuteJSON())
@@ -136,6 +144,23 @@ export default function Home() {
         });
     }
 
+    const loadTable = async () => {
+        let items: any[] = [];
+        let keys = JSON.parse(tableParam.keys);
+        for (let key of keys) {
+            const currentKeyItem = await client.getTableItem(tableParam.handle, {
+                key_type: tableParam.keyType,
+                value_type: tableParam.valueType,
+                key,
+            });
+            items.push(currentKeyItem);
+            console.log(currentKeyItem);
+        }
+        console.log(items);
+        debugger
+        updateTableItems(items);
+    }
+
     return (
         <>
 
@@ -202,8 +227,6 @@ export default function Home() {
             <div className="card w-3/4 bg-base-100 shadow-xl mt-2">
                 <div className="card-body">
                     <h2 className="card-title">load resource</h2>
-
-
                     <select onChange={(e) => { updateResource(e.target.value) }} className="select-lg select-primary w-full mt-5">
                         {
                             resourceList.map((item, idx) => {
@@ -221,6 +244,50 @@ export default function Home() {
                 <div className="card-body">
                     <h2>Contract Data : </h2>
                     <pre>{JSON.stringify(contractData, null, 2)}</pre>
+                </div>
+            </div>
+
+
+            <div className="card w-3/4 bg-base-100 shadow-xl mt-2">
+                <div className="card-body">
+                    <h2 className="card-title">load table</h2>
+                    <input type="text" placeholder="key Type"
+                        className="input input-bordered w-full"
+                        value={tableParam.keyType}
+                        onChange={(e) => {
+                            doUpdateTableParam({ ...tableParam, keyType: e.target.value })
+                        }} />
+
+                    <input type="text" placeholder="value Type"
+                        className="input input-bordered w-full"
+                        value={tableParam.valueType}
+                        onChange={(e) => {
+                            doUpdateTableParam({ ...tableParam, valueType: e.target.value })
+                        }} />
+
+                    <input type="text" placeholder="table handle"
+                        className="input input-bordered w-full"
+                        value={tableParam.handle}
+                        onChange={(e) => {
+                            doUpdateTableParam({ ...tableParam, handle: e.target.value })
+                        }} />
+                    <input type="text" placeholder="table keys"
+                        className="input input-bordered w-full"
+                        value={tableParam.keys}
+                        onChange={(e) => {
+                            doUpdateTableParam({ ...tableParam, keys: e.target.value })
+                        }} />
+
+                    <div className="card-actions justify-end">
+                        <button onClick={loadTable} className="btn btn-primary">Load</button>
+                    </div>
+                </div>
+            </div>
+
+            <div className="card w-3/4 bg-base-100 shadow-xl mt-2">
+                <div className="card-body">
+                    <h2>table Data : </h2>
+                    <pre>{JSON.stringify(tableItems, null, 2)}</pre>
                 </div>
             </div>
 
