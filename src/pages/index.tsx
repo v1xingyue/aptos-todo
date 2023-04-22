@@ -19,7 +19,7 @@ const defaultExecuteJSON = () => {
 }
 
 export default function Home() {
-    const client = new AptosClient(APTOS_NODE_URL);
+    const [client] = useState(new AptosClient(APTOS_NODE_URL));
     const coinClient = new CoinClient(client);
     const defaultResource = `${DAPP_ADDRESS}::helloworld::NamedValue`;
     const [resource, updateResource] = useState(defaultResource);
@@ -112,6 +112,10 @@ export default function Home() {
         account
     ])
 
+    useEffect(() => {
+        console.log("now current network ", network);
+    }, [network]);
+
 
     const loadTaskByKey = async (handle: string, key: string) => {
         const tableItem = await client.getTableItem(handle, {
@@ -145,9 +149,9 @@ export default function Home() {
     }
 
     const loadTable = async () => {
-        let items: any[] = [];
-        let keys = JSON.parse(tableParam.keys);
-        for (let key of keys) {
+        const items: any[] = [];
+        const keys = JSON.parse(tableParam.keys);
+        for (const key of keys) {
             const currentKeyItem = await client.getTableItem(tableParam.handle, {
                 key_type: tableParam.keyType,
                 value_type: tableParam.valueType,
@@ -157,12 +161,11 @@ export default function Home() {
             console.log(currentKeyItem);
         }
         console.log(items);
-        debugger
         updateTableItems(items);
     }
 
     return (
-        <>
+        <div className="container mx-6 content-center">
 
             <div className="card w-3/4 bg-base-100 shadow-xl mt-3">
                 <div className="card-body">
@@ -291,6 +294,6 @@ export default function Home() {
                 </div>
             </div>
 
-        </>
+        </div>
     )
 }
